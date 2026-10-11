@@ -2880,23 +2880,4 @@ function formatDate(dateString) {
 
 }
 
-
-
-
-function pageTitle(page) {
-  const titles = {
-    books: "Book Collection",
-    ebooks: "E-Books Library",
-    members: "Members",
-    issue: "Issue & Return",
-    history: "Activity Timeline",
-    recommendations: "For You",
-    waiting: "Waiting Queue",
-  };
-
-  return titles[page] || "Dashboard";
-}
-
-
-
 export default App;
