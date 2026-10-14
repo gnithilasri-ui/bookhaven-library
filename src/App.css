@@ -1,72 +1,67 @@
 @import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap");
 
 
-
 :root {
-
   font-family: "DM Sans", sans-serif;
-
-  color: #18202f;
-
-  background: #f6f8fb;
-
+  color: #f6f1f2;
+  background: #17191f;
   font-synthesis: none;
-
   text-rendering: optimizeLegibility;
 
+  /* Main theme: charcoal + dark red */
+  --bg: #17191f;
+  --surface: #1d2028;
+  --surface-soft: #28212a;
+  --text: #f6f1f2;
+  --muted: #aaa3ad;
+  --border: #39313b;
 
+  /* Red accent */
+  --primary: #b83b4e;
+  --primary-dark: #902b3c;
+  --primary-soft: #39232c;
 
-  --bg: #f6f8fb;
-
-  --surface: #ffffff;
-
-  --surface-soft: #f8fafc;
-
-  --text: #18202f;
-
-  --muted: #778195;
-
-  --border: #e5e9f0;
-
-  --primary: #193f73;
-
-  --primary-dark: #102e59;
-
-  --primary-soft: #eaf1fb;
-
-  --danger: #b33b3b;
-
-  --shadow: 0 14px 40px rgba(20, 36, 62, 0.08);
-
+  --danger: #f07886;
+  --shadow: 0 14px 40px rgba(0, 0, 0, 0.24);
 }
 
-
-
+/* Keep both dark and light/system selections in the same theme family */
 :root[data-theme="dark"] {
+  color-scheme: dark;
 
-  --bg: #101722;
+  --bg: #17191f;
+  --surface: #1d2028;
+  --surface-soft: #28212a;
+  --text: #f6f1f2;
+  --muted: #aaa3ad;
+  --border: #39313b;
 
-  --surface: #182230;
+  --primary: #b83b4e;
+  --primary-dark: #902b3c;
+  --primary-soft: #39232c;
 
-  --surface-soft: #202b3a;
-
-  --text: #f1f5f9;
-
-  --muted: #9aa7b8;
-
-  --border: #2c394b;
-
-  --primary: #5f8fc9;
-
-  --primary-dark: #7ca5d6;
-
-  --primary-soft: #24364e;
-
-  --danger: #e07b7b;
-
-  --shadow: 0 14px 40px rgba(0, 0, 0, 0.2);
-
+  --danger: #f07886;
+  --shadow: 0 14px 40px rgba(0, 0, 0, 0.24);
 }
+
+:root[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: #f6f2f3;
+  --surface: #ffffff;
+  --surface-soft: #f7edef;
+  --text: #282027;
+  --muted: #796d76;
+  --border: #e8dce0;
+
+  --primary: #a83243;
+  --primary-dark: #852536;
+  --primary-soft: #f5e5e9;
+
+  --danger: #b42336;
+  --shadow: 0 14px 40px rgba(65, 25, 35, 0.08);
+}
+
 
 
 
@@ -113,7 +108,6 @@ button {
   cursor: pointer;
 
 }
-
 
 
 button:focus-visible,
@@ -2682,30 +2676,21 @@ td {
 
 
 
+
 @media (prefers-color-scheme: dark) {
-
   :root:not([data-theme="light"]) {
-
-    --bg: #101722;
-
-    --surface: #182230;
-
-    --surface-soft: #202b3a;
-
-    --text: #f1f5f9;
-
-    --muted: #9aa7b8;
-
-    --border: #2c394b;
-
-    --primary: #5f8fc9;
-
-    --primary-dark: #7ca5d6;
-
-    --primary-soft: #24364e;
-
+    --bg: #17191f;
+    --surface: #1d2028;
+    --surface-soft: #28212a;
+    --text: #f6f1f2;
+    --muted: #aaa3ad;
+    --border: #39313b;
+    --primary: #b83b4e;
+    --primary-dark: #902b3c;
+    --primary-soft: #39232c;
+    --danger: #f07886;
+    --shadow: 0 14px 40px rgba(0, 0, 0, 0.24);
   }
-
 }
 
 /* =========================================================
@@ -3293,4 +3278,854 @@ input[type="date"] {
   .modal-actions .btn {
     width: 100%;
   }
+}
+
+
+/* ===== BookHaven E-books: Dark Red + Charcoal ===== */
+
+.ebooks-page {
+  --ebook-red: #a83243;
+  --ebook-red-bright: #d34b5d;
+  --ebook-red-soft: rgba(168, 50, 67, 0.15);
+  --ebook-panel: #17191f;
+  --ebook-panel-soft: #1d2028;
+  --ebook-border: #34313a;
+  --ebook-text: #f6f1f2;
+  --ebook-muted: #aaa3ad;
+  width: 100%;
+  min-width: 0;
+  color: var(--ebook-text);
+  padding-bottom: 36px;
+}
+
+.ebooks-page,
+.ebooks-page * {
+  box-sizing: border-box;
+}
+
+.ebooks-hero {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  overflow: hidden;
+  min-height: 245px;
+  margin-bottom: 26px;
+  padding: 34px 38px;
+  border: 1px solid #53303a;
+  border-radius: 20px;
+  background:
+    radial-gradient(ellipse at 80% 20%, rgba(168, 50, 67, .22), transparent 48%),
+    linear-gradient(120deg, #211b22, #17191f 72%);
+}
+
+.ebooks-hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 540px;
+}
+
+.ebooks-eyebrow {
+  display: block;
+  color: #d96a79;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: .19em;
+}
+
+.ebooks-hero h2 {
+  margin: 13px 0 10px;
+  color: #fff7f7;
+  font-size: clamp(26px, 3vw, 38px);
+  line-height: 1.15;
+  letter-spacing: -.045em;
+}
+
+.ebooks-hero p {
+  max-width: 450px;
+  margin: 0;
+  color: #c2b9c0;
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.ebooks-hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-top: 25px;
+}
+
+.ebooks-stat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ebooks-stat-icon {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid #63313c;
+  border-radius: 11px;
+  background: rgba(168, 50, 67, .18);
+  color: #f0808c;
+  font-size: 20px;
+}
+
+.ebooks-stat strong,
+.ebooks-stat div > span {
+  display: block;
+}
+
+.ebooks-stat strong {
+  color: #fff;
+  font-size: 17px;
+}
+
+.ebooks-stat div > span {
+  margin-top: 3px;
+  color: #b9adb6;
+  font-size: 10px;
+}
+
+.ebooks-hero-art {
+  position: relative;
+  flex: 0 0 205px;
+  height: 175px;
+}
+
+.ebooks-book {
+  position: absolute;
+  top: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 102px;
+  height: 143px;
+  padding: 12px 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .19);
+  border-radius: 4px 10px 10px 4px;
+  box-shadow: 0 15px 25px rgba(0, 0, 0, .3);
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.ebooks-book-back {
+  left: 76px;
+  transform: rotate(13deg);
+  background: #51404b;
+  color: #f5d9de;
+}
+
+.ebooks-book-middle {
+  left: 40px;
+  transform: rotate(-12deg);
+  background: #8c2e40;
+  color: white;
+}
+
+.ebooks-book-front {
+  left: 4px;
+  transform: rotate(-2deg);
+  background: linear-gradient(145deg, #c24759, #682331);
+  color: white;
+}
+
+.ebooks-book-front > span {
+  font-size: 29px;
+  font-family: Georgia, serif;
+}
+
+.ebooks-book-front strong {
+  font-size: 14px;
+  line-height: 1.15;
+}
+
+.ebooks-book-front small {
+  font-size: 6px;
+  letter-spacing: .12em;
+}
+
+.ebooks-upload-panel {
+  margin-bottom: 32px;
+  overflow: hidden;
+  border: 1px solid var(--ebook-border);
+  border-radius: 15px;
+  background: var(--ebook-panel);
+}
+
+.ebooks-upload-panel summary {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 17px 20px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.ebooks-upload-panel summary::-webkit-details-marker {
+  display: none;
+}
+
+.ebooks-upload-symbol {
+  display: grid;
+  place-items: center;
+  width: 39px;
+  height: 39px;
+  border-radius: 11px;
+  background: var(--ebook-red-soft);
+  color: #f07a89;
+  font-size: 23px;
+}
+
+.ebooks-upload-heading {
+  flex: 1;
+  min-width: 0;
+}
+
+.ebooks-upload-heading strong,
+.ebooks-upload-heading small {
+  display: block;
+}
+
+.ebooks-upload-heading strong {
+  color: var(--ebook-text);
+  font-size: 13px;
+}
+
+.ebooks-upload-heading small {
+  margin-top: 4px;
+  color: var(--ebook-muted);
+  font-size: 11px;
+}
+
+.ebooks-upload-toggle {
+  color: #e06a7b;
+  font-size: 22px;
+}
+
+.ebooks-upload-panel[open] .ebooks-upload-toggle {
+  transform: rotate(45deg);
+}
+
+.ebooks-form {
+  padding: 5px 20px 22px;
+  border-top: 1px solid var(--ebook-border);
+}
+
+.ebooks-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 17px;
+  padding-top: 19px;
+}
+
+.ebooks-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+}
+
+.ebooks-field > span {
+  color: #e4dce1;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.ebooks-field input,
+.ebooks-field textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #403842;
+  border-radius: 9px;
+  outline: none;
+  background: #111318;
+  color: #f9f3f5;
+  padding: 12px 13px;
+  font: inherit;
+  font-size: 12px;
+  transition: border-color .18s, box-shadow .18s;
+}
+
+.ebooks-field input {
+  min-height: 43px;
+}
+
+.ebooks-field textarea {
+  resize: vertical;
+  min-height: 90px;
+}
+
+.ebooks-field input:focus,
+.ebooks-field textarea:focus {
+  border-color: var(--ebook-red-bright);
+  box-shadow: 0 0 0 3px rgba(211, 75, 93, .12);
+}
+
+.ebooks-field input[type="file"] {
+  padding: 8px;
+  color: #c9bec7;
+}
+
+.ebooks-field input[type="file"]::file-selector-button {
+  margin-right: 10px;
+  padding: 7px 10px;
+  border: 0;
+  border-radius: 6px;
+  background: #39242c;
+  color: #ffe8ec;
+  cursor: pointer;
+}
+
+.ebooks-field > small {
+  overflow-wrap: anywhere;
+  color: var(--ebook-muted);
+  font-size: 10px;
+}
+
+.ebooks-field-wide {
+  grid-column: 1 / -1;
+}
+
+.ebooks-primary-button,
+.ebooks-download-button,
+.ebooks-secondary-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 39px;
+  padding: 10px 13px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  text-decoration: none;
+  text-align: center;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 750;
+  cursor: pointer;
+  transition: background .18s, border-color .18s, transform .18s;
+}
+
+.ebooks-primary-button {
+  background: linear-gradient(135deg, #b73b4e, #8d2638);
+  color: white;
+}
+
+.ebooks-primary-button:hover {
+  background: linear-gradient(135deg, #d14b5e, #a52d41);
+  transform: translateY(-1px);
+}
+
+.ebooks-primary-button:disabled {
+  opacity: .6;
+  cursor: wait;
+  transform: none;
+}
+
+.ebooks-form > .ebooks-primary-button {
+  margin-top: 18px;
+}
+
+.ebooks-download-button,
+.ebooks-secondary-button {
+  border-color: #49404a;
+  background: #242129;
+  color: #f0e6ec;
+}
+
+.ebooks-download-button:hover,
+.ebooks-secondary-button:hover {
+  border-color: #9e3d4d;
+  background: #302129;
+}
+
+.ebooks-feedback {
+  margin: 15px 0 0;
+  padding: 11px 13px;
+  border: 1px solid #55343e;
+  border-radius: 9px;
+  background: #261a20;
+  color: #f4b9c2;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+
+.ebooks-member-note {
+  margin-bottom: 28px;
+  padding: 13px 15px;
+  border: 1px solid #48313a;
+  border-radius: 10px;
+  background: #211a20;
+  color: #d5c3cc;
+  font-size: 12px;
+}
+
+.ebooks-member-note span {
+  margin-right: 9px;
+  color: #ed7787;
+}
+
+.ebooks-collection-header {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 0 0 18px;
+}
+
+.ebooks-collection-header h3 {
+  margin: 8px 0 5px;
+  color: #f8f2f5;
+  font-size: 22px;
+  letter-spacing: -.035em;
+}
+
+.ebooks-collection-header p {
+  margin: 0;
+  color: var(--ebook-muted);
+  font-size: 11px;
+}
+
+.ebooks-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.ebooks-search {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 0;
+  min-height: 44px;
+  gap: 10px;
+  padding: 0 12px;
+  border: 1px solid var(--ebook-border);
+  border-radius: 10px;
+  background: var(--ebook-panel);
+}
+
+.ebooks-search > span {
+  color: #d96a79;
+  font-size: 24px;
+  line-height: 1;
+}
+
+.ebooks-search input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #f8f2f5;
+  font: inherit;
+  font-size: 12px;
+}
+
+.ebooks-search input::placeholder {
+  color: #827a85;
+}
+
+.ebooks-search button {
+  border: 0;
+  background: transparent;
+  color: #cbbec7;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.ebooks-category-select {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 10px;
+  border: 1px solid var(--ebook-border);
+  border-radius: 10px;
+  background: var(--ebook-panel);
+}
+
+.ebooks-category-select > span {
+  color: var(--ebook-muted);
+  font-size: 10px;
+}
+
+.ebooks-category-select select {
+  max-width: 145px;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #f7eff3;
+  font: inherit;
+  font-size: 11px;
+}
+
+.ebooks-category-select option {
+  background: #202027;
+  color: white;
+}
+
+.ebooks-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 17px;
+}
+
+.ebooks-card {
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--ebook-border);
+  border-radius: 14px;
+  background: var(--ebook-panel);
+  transition: border-color .2s, transform .2s, box-shadow .2s;
+}
+
+.ebooks-card:hover {
+  transform: translateY(-3px);
+  border-color: #78404b;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, .2);
+}
+
+.ebooks-cover {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  min-height: 185px;
+  margin: 12px 12px 0;
+  padding: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 90% 20%, rgba(255,255,255,.12), transparent 36%),
+    linear-gradient(145deg, #963648, #451f2c);
+  color: white;
+}
+
+.ebooks-cover-1 {
+  background: linear-gradient(145deg, #51404c, #26232d);
+}
+
+.ebooks-cover-2 {
+  background: linear-gradient(145deg, #813d36, #39232a);
+}
+
+.ebooks-cover-3 {
+  background: linear-gradient(145deg, #57404a, #29212c);
+}
+
+.ebooks-cover-4 {
+  background: linear-gradient(145deg, #9c4550, #38222e);
+}
+
+.ebooks-cover-label,
+.ebooks-cover-bottom {
+  position: relative;
+  z-index: 1;
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: .15em;
+  opacity: .8;
+}
+
+.ebooks-cover-art {
+  position: absolute;
+  top: 22px;
+  right: 18px;
+  color: rgba(255, 255, 255, .16);
+  font-family: Georgia, serif;
+  font-size: 85px;
+  line-height: 1;
+}
+
+.ebooks-cover > strong {
+  position: relative;
+  z-index: 1;
+  display: -webkit-box;
+  max-width: 100%;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  font-family: Georgia, serif;
+  font-size: 20px;
+  line-height: 1.15;
+}
+
+.ebooks-cover-author {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  overflow: hidden;
+  color: #f0dce1;
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ebooks-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 15px;
+}
+
+.ebooks-category-tag {
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  padding: 5px 8px;
+  border: 1px solid #56323d;
+  border-radius: 5px;
+  background: #2c1e25;
+  color: #e88b99;
+  font-size: 9px;
+  font-weight: 750;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ebooks-card-content h4 {
+  display: -webkit-box;
+  width: 100%;
+  margin: 11px 0 5px;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  color: #f9f3f5;
+  font-size: 14px;
+  line-height: 1.4;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.ebooks-card-author {
+  margin: 0;
+  color: #c0b2bd;
+  font-size: 10px;
+}
+
+.ebooks-card-description {
+  display: -webkit-box;
+  width: 100%;
+  min-height: 34px;
+  margin: 10px 0 0;
+  overflow: hidden;
+  color: #a9a0ac;
+  font-size: 10px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.ebooks-card-actions {
+  display: flex;
+  width: 100%;
+  gap: 7px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid #34303a;
+}
+
+.ebooks-card-actions .ebooks-primary-button {
+  flex: 1;
+  min-width: 0;
+}
+
+.ebooks-card-actions .ebooks-download-button {
+  flex: 0 0 auto;
+}
+
+.ebooks-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+  padding: 28px 20px;
+  border: 1px dashed #48404a;
+  border-radius: 14px;
+  background: rgba(23, 25, 31, .7);
+  text-align: center;
+}
+
+.ebooks-state h3 {
+  margin: 10px 0 5px;
+  color: #f8f1f4;
+  font-size: 16px;
+}
+
+.ebooks-state p {
+  max-width: 420px;
+  margin: 5px 0 14px;
+  color: var(--ebook-muted);
+  font-size: 12px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.ebooks-empty-icon,
+.ebooks-error > span {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid #59313d;
+  border-radius: 14px;
+  background: #2b1d25;
+  color: #e47b8b;
+  font-size: 25px;
+}
+
+.ebooks-error > span {
+  font-weight: 800;
+}
+
+.ebooks-loader {
+  width: 29px;
+  height: 29px;
+  border: 3px solid #48303a;
+  border-top-color: #d34b5d;
+  border-radius: 50%;
+  animation: ebooks-spin .8s linear infinite;
+}
+
+@keyframes ebooks-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 1100px) {
+  .ebooks-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ebooks-hero {
+    padding: 27px;
+  }
+
+  .ebooks-hero-art {
+    flex-basis: 155px;
+    transform: scale(.86);
+    transform-origin: center right;
+  }
+}
+
+@media (max-width: 760px) {
+  .ebooks-hero {
+    min-height: auto;
+    padding: 23px 20px;
+  }
+
+  .ebooks-hero-art {
+    display: none;
+  }
+
+  .ebooks-hero h2 {
+    font-size: 27px;
+  }
+
+  .ebooks-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 11px;
+  }
+
+  .ebooks-cover {
+    min-height: 155px;
+    margin: 8px 8px 0;
+    padding: 10px;
+  }
+
+  .ebooks-cover > strong {
+    font-size: 16px;
+  }
+
+  .ebooks-card-content {
+    padding: 10px;
+  }
+
+  .ebooks-card-actions {
+    flex-direction: column;
+  }
+
+  .ebooks-card-actions .ebooks-download-button {
+    width: 100%;
+  }
+
+  .ebooks-toolbar {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .ebooks-category-select {
+    justify-content: space-between;
+  }
+
+  .ebooks-category-select select {
+    max-width: 60%;
+  }
+}
+
+@media (max-width: 420px) {
+  .ebooks-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ebooks-cover {
+    min-height: 190px;
+  }
+
+  .ebooks-card-actions {
+    flex-direction: row;
+  }
+
+  .ebooks-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ebooks-field-wide {
+    grid-column: auto;
+  }
+
+  .ebooks-hero-stats {
+    gap: 15px;
+  }
+
+  .ebooks-upload-panel summary {
+    padding: 14px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ebooks-page *,
+  .ebooks-page *::before,
+  .ebooks-page *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+/* Global font size */
+html {
+  font-size: 17px;
+}
+
+body {
+  font-size: 1rem;
+}
+
+button,
+input,
+select,
+textarea {
+  font-size: 1rem;
 }

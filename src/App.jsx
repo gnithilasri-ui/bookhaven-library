@@ -968,22 +968,24 @@ function pageTitle(page) {
 }
 
 
+
 function EbooksPage({ role }) {
   const [ebooks, setEbooks] = React.useState([]);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState("");
-
+  const [search, setSearch] = React.useState("");
+  const [category, setCategory] = React.useState("All");
   const [form, setForm] = React.useState({
     title: "",
     author: "",
     category: "",
     description: "",
   });
-
   const [file, setFile] = React.useState(null);
   const [message, setMessage] = React.useState("");
   const [uploading, setUploading] = React.useState(false);
 
+  // Keep the existing backend API.
   const API = "http://127.0.0.1:5000";
 
   async function loadEbooks() {
@@ -996,9 +998,11 @@ function EbooksPage({ role }) {
       }
 
       const data = await response.json();
-      setEbooks(data);
-    } catch (err) {
-      setError("Backend connect aagala. Flask server running-a check pannu.");
+      setEbooks(Array.isArray(data) ? data : []);
+    } catch {
+      setError(
+        "Unable to load e-books. Check whether the backend is running."
+      );
     } finally {
       setLoading(false);
     }
@@ -1009,30 +1013,27 @@ function EbooksPage({ role }) {
   }, []);
 
   function handleChange(event) {
-    setForm({
-      ...form,
+    setForm((previous) => ({
+      ...previous,
       [event.target.name]: event.target.value,
-    });
+    }));
   }
 
   async function handleUpload(event) {
     event.preventDefault();
 
-    if (!file) {
-      setMessage("Please select a PDF file.");
-      return;
-    }
+    if (role !== "admin") return;
 
-    if (file.type !== "application/pdf") {
-      setMessage("PDF files mattum upload pannalaam.");
+    if (!file || file.type !== "application/pdf") {
+      setMessage("Please choose a valid PDF file.");
       return;
     }
 
     const data = new FormData();
-    data.append("title", form.title);
-    data.append("author", form.author);
-    data.append("category", form.category);
-    data.append("description", form.description);
+    data.append("title", form.title.trim());
+    data.append("author", form.author.trim());
+    data.append("category", form.category.trim());
+    data.append("description", form.description.trim());
     data.append("file", file);
     data.append("role", role);
 
@@ -1052,6 +1053,7 @@ function EbooksPage({ role }) {
       }
 
       setMessage("E-book uploaded successfully!");
+
       setForm({
         title: "",
         author: "",
@@ -1059,104 +1061,335 @@ function EbooksPage({ role }) {
         description: "",
       });
       setFile(null);
-      event.target.reset();
+
+      if (event.target instanceof HTMLFormElement) {
+        event.target.reset();
+      }
+
       await loadEbooks();
     } catch (err) {
-      setMessage(err.message || "Upload failed. Try again.");
+      setMessage(err.message || "Upload failed. Please try again.");
     } finally {
       setUploading(false);
     }
   }
 
+  const categories = [
+    "All",
+    ...new Set(
+      ebooks.map((book) => book.category?.trim()).filter(Boolean)
+    ),
+  ];
+
+  const filteredEbooks = ebooks.filter((book) => {
+    const query = search.trim().toLowerCase();
+
+    const matchesSearch = [
+      book.title,
+      book.author,
+      book.category,
+      book.description,
+    ].some((value) => String(value || "").toLowerCase().includes(query));
+
+    const matchesCategory =
+      category === "All" || book.category === category;
+
+    return matchesSearch && matchesCategory;
+  });
+
   return (
-    <div className="ebooks-page">
-      <h2>E-Books Library 📚</h2>
-      <p>Read and download your library e-books.</p>
+    <section className="ebooks-page">
+      <div className="ebooks-hero">
+        <div className="ebooks-hero-content">
+          <span className="ebooks-eyebrow">
+            YOUR DIGITAL READING SPACE
+          </span>
+          <h2>Discover your next read.</h2>
+          <p>
+            Explore your library's digital collection, all in one place.
+          </p>
+
+          <div className="ebooks-hero-stats">
+            <div className="ebooks-stat">
+              <span className="ebooks-stat-icon">▤</span>
+              <div>
+                <strong>{ebooks.length}</strong>
+                <span>Digital books</span>
+              </div>
+            </div>
+            <div className="ebooks-stat">
+              <span className="ebooks-stat-icon">⌕</span>
+              <div>
+                <strong>{categories.length - 1}</strong>
+                <span>Categories</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="ebooks-hero-art" aria-hidden="true">
+          <div className="ebooks-book ebooks-book-back">READ</div>
+          <div className="ebooks-book ebooks-book-middle">EXPLORE</div>
+          <div className="ebooks-book ebooks-book-front">
+            <span>BH</span>
+            <strong>BOOK<br />HAVEN</strong>
+            <small>YOUR NEXT CHAPTER</small>
+          </div>
+        </div>
+      </div>
 
       {role === "admin" && (
-        <form onSubmit={handleUpload}>
-          <h3>Upload a New E-book</h3>
+        <details className="ebooks-upload-panel">
+          <summary>
+            <span className="ebooks-upload-symbol">＋</span>
+            <span className="ebooks-upload-heading">
+              <strong>Add a new e-book</strong>
+              <small>Upload a PDF to your digital collection</small>
+            </span>
+            <span className="ebooks-upload-toggle">＋</span>
+          </summary>
 
-          <input
-            name="title"
-            placeholder="Book title"
-            value={form.title}
-            onChange={handleChange}
-            required
-          />
+          <form className="ebooks-form" onSubmit={handleUpload}>
+            <div className="ebooks-form-grid">
+              <label className="ebooks-field">
+                <span>Book title *</span>
+                <input
+                  name="title"
+                  placeholder="Enter the book title"
+                  value={form.title}
+                  onChange={handleChange}
+                  required
+                />
+              </label>
 
-          <input
-            name="author"
-            placeholder="Author"
-            value={form.author}
-            onChange={handleChange}
-          />
+              <label className="ebooks-field">
+                <span>Author</span>
+                <input
+                  name="author"
+                  placeholder="Author name"
+                  value={form.author}
+                  onChange={handleChange}
+                />
+              </label>
 
-          <input
-            name="category"
-            placeholder="Category"
-            value={form.category}
-            onChange={handleChange}
-          />
+              <label className="ebooks-field">
+                <span>Category</span>
+                <input
+                  name="category"
+                  placeholder="e.g. Technology"
+                  value={form.category}
+                  onChange={handleChange}
+                />
+              </label>
 
-          <textarea
-            name="description"
-            placeholder="Book description"
-            value={form.description}
-            onChange={handleChange}
-          />
+              <label className="ebooks-field">
+                <span>PDF file *</span>
+                <input
+                  type="file"
+                  accept=".pdf,application/pdf"
+                  onChange={(event) =>
+                    setFile(event.target.files?.[0] || null)
+                  }
+                  required
+                />
+                <small>
+                  {file ? file.name : "PDF format only"}
+                </small>
+              </label>
 
-          <input
-            type="file"
-            accept="application/pdf,.pdf"
-            onChange={(event) => setFile(event.target.files[0] || null)}
-            required
-          />
+              <label className="ebooks-field ebooks-field-wide">
+                <span>Description</span>
+                <textarea
+                  name="description"
+                  placeholder="What is this book about?"
+                  value={form.description}
+                  onChange={handleChange}
+                  rows={3}
+                />
+              </label>
+            </div>
 
-          <button type="submit" disabled={uploading}>
-            {uploading ? "Uploading..." : "Upload PDF"}
-          </button>
-        </form>
+            {message && (
+              <p className="ebooks-feedback" role="status">{message}</p>
+            )}
+
+            <button
+              className="ebooks-primary-button"
+              type="submit"
+              disabled={uploading}
+            >
+              {uploading ? "Uploading..." : "↑  Upload e-book"}
+            </button>
+          </form>
+        </details>
       )}
 
-      {message && <p>{message}</p>}
-      {loading && <p>Loading e-books...</p>}
-      {error && <p>{error}</p>}
-
-      {!loading && !error && ebooks.length === 0 && (
-        <p>No e-books available yet.</p>
+      {role !== "admin" && (
+        <div className="ebooks-member-note">
+          <span>✦</span>
+          Browse the collection and choose a book to start reading.
+        </div>
       )}
 
-      <div className="ebooks-list">
-        {ebooks.map((ebook) => (
-          <article key={ebook.id} className="ebook-card">
-            <h3>{ebook.title}</h3>
-            <p>Author: {ebook.author || "Unknown"}</p>
-            <p>Category: {ebook.category || "General"}</p>
-            <p>{ebook.description}</p>
-
-            <a
-              href={`${API}/api/ebooks/${ebook.id}/file`}
-              target="_blank"
-              rel="noreferrer"
-            >
-              Read PDF
-            </a>
-
-            {" | "}
-
-            <a
-              href={`${API}/api/ebooks/${ebook.id}/file?download=true`}
-            >
-              Download PDF
-            </a>
-          </article>
-        ))}
+      <div className="ebooks-collection-header">
+        <div>
+          <span className="ebooks-eyebrow">THE COLLECTION</span>
+          <h3>Explore e-books</h3>
+          <p>
+            {loading
+              ? "Loading your collection..."
+              : `${filteredEbooks.length} ${
+                  filteredEbooks.length === 1 ? "book" : "books"
+                } to explore`}
+          </p>
+        </div>
       </div>
-    </div>
+
+      <div className="ebooks-toolbar">
+        <label className="ebooks-search">
+          <span aria-hidden="true">⌕</span>
+          <input
+            type="search"
+            placeholder="Search title, author or topic..."
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            aria-label="Search e-books"
+          />
+          {search && (
+            <button
+              type="button"
+              onClick={() => setSearch("")}
+              aria-label="Clear search"
+            >
+              ×
+            </button>
+          )}
+        </label>
+
+        <label className="ebooks-category-select">
+          <span>Category</span>
+          <select
+            value={category}
+            onChange={(event) => setCategory(event.target.value)}
+          >
+            {categories.map((item) => (
+              <option key={item} value={item}>{item}</option>
+            ))}
+          </select>
+        </label>
+      </div>
+
+      {message && role !== "admin" && (
+        <p className="ebooks-feedback" role="status">{message}</p>
+      )}
+
+      {error && (
+        <div className="ebooks-state ebooks-error">
+          <span>!</span>
+          <h3>Collection unavailable</h3>
+          <p>{error}</p>
+          <button
+            className="ebooks-secondary-button"
+            onClick={loadEbooks}
+            type="button"
+          >
+            Try again
+          </button>
+        </div>
+      )}
+
+      {loading && (
+        <div className="ebooks-state">
+          <div className="ebooks-loader" />
+          <p>Preparing your digital library...</p>
+        </div>
+      )}
+
+      {!loading && !error && filteredEbooks.length === 0 && (
+        <div className="ebooks-state">
+          <span className="ebooks-empty-icon">▤</span>
+          <h3>
+            {ebooks.length === 0
+              ? "Your collection starts here"
+              : "No matching e-books"}
+          </h3>
+          <p>
+            {ebooks.length === 0
+              ? role === "admin"
+                ? "Use the upload panel above to add your first PDF."
+                : "Your library has not added any e-books yet."
+              : "Try another search term or select a different category."}
+          </p>
+          {(search || category !== "All") && (
+            <button
+              className="ebooks-secondary-button"
+              type="button"
+              onClick={() => {
+                setSearch("");
+                setCategory("All");
+              }}
+            >
+              Clear filters
+            </button>
+          )}
+        </div>
+      )}
+
+      {!loading && !error && filteredEbooks.length > 0 && (
+        <div className="ebooks-grid">
+          {filteredEbooks.map((ebook, index) => (
+            <article className="ebooks-card" key={ebook.id}>
+              <div className={`ebooks-cover ebooks-cover-${index % 5}`}>
+                <span className="ebooks-cover-label">BOOKHAVEN DIGITAL</span>
+                <div className="ebooks-cover-art" aria-hidden="true">
+                  {["✦", "◈", "▤", "⌘", "✳"][index % 5]}
+                </div>
+                <strong>{ebook.title}</strong>
+                <span className="ebooks-cover-author">
+                  {ebook.author || "Unknown author"}
+                </span>
+                <span className="ebooks-cover-bottom">E-BOOK  /  PDF</span>
+              </div>
+
+              <div className="ebooks-card-content">
+                <span className="ebooks-category-tag">
+                  {ebook.category || "General"}
+                </span>
+                <h4>{ebook.title}</h4>
+                <p className="ebooks-card-author">
+                  By {ebook.author || "Unknown author"}
+                </p>
+                {ebook.description && (
+                  <p className="ebooks-card-description">
+                    {ebook.description}
+                  </p>
+                )}
+
+                <div className="ebooks-card-actions">
+                  <a
+                    className="ebooks-primary-button"
+                    href={`${API}/api/ebooks/${ebook.id}/file`}
+                    target="_blank"
+                    rel="noreferrer"
+                  >
+                    ↗ Read PDF
+                  </a>
+                  <a
+                    className="ebooks-download-button"
+                    href={`${API}/api/ebooks/${ebook.id}/file?download=true`}
+                  >
+                    ↓
+                    <span>Download</span>
+                  </a>
+                </div>
+              </div>
+            </article>
+          ))}
+        </div>
+      )}
+    </section>
   );
 }
-
 
 function Sidebar({ page, setPage, session, onLogout }) {
   const adminMenu = [
