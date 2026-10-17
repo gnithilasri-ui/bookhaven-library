@@ -1,12 +1,20 @@
+
 import sqlite3
 
-conn = sqlite3.connect("bookhaven.db")
+connection = sqlite3.connect("backend/bookhaven.db")
+cursor = connection.cursor()
 
-tables = conn.execute(
-    "SELECT name FROM sqlite_master WHERE type = ? AND name = ?",
-    ("table", "ebooks")
-).fetchall()
+tables = cursor.execute("""
+    SELECT name
+    FROM sqlite_master
+    WHERE type = 'table'
+      AND name NOT LIKE 'sqlite_%'
+""").fetchall()
 
-print("E-books table:", tables)
+for (table,) in tables:
+    count = cursor.execute(
+        f'SELECT COUNT(*) FROM "{table}"'
+    ).fetchone()[0]
+    print(f"{table}: {count} records")
 
-conn.close()
+connection.close()

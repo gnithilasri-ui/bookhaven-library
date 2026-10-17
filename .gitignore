@@ -42,3 +42,6 @@ backend/*.sqlite3
 
 # Python generated files
 .pytest_cache/
+
+# User-uploaded files
+backend/uploads/

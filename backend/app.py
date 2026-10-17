@@ -11,7 +11,6 @@ from database import get_db_connection
 from functools import wraps
 from datetime import datetime, timezone
 from flask import jsonify
-from werkzeug.security import generate_password_hash
 from itsdangerous import URLSafeTimedSerializer, BadSignature, SignatureExpired
 
 app = Flask(__name__)
@@ -121,6 +120,62 @@ def get_books():
     finally:
         conn.close()
 
+
+# ---------------- ADD BOOK ----------------
+
+@app.route("/api/books", methods=["POST"])
+@require_admin
+def add_book():
+    data = request.get_json(silent=True) or {}
+
+    title = str(data.get("title", "")).strip()
+    author = str(data.get("author", "")).strip()
+    category = str(data.get("category", "")).strip()
+    isbn = str(data.get("isbn", "")).strip() or None
+
+    try:
+        copies = int(data.get("copies", 1))
+    except (TypeError, ValueError):
+        return {"message": "Copies must be a valid integer."}, 400
+
+    if not title or not category:
+        return {"message": "Title and category are required."}, 400
+
+    if copies < 1:
+        return {"message": "Copies must be at least 1."}, 400
+
+    conn = get_db_connection()
+
+    try:
+        cursor = conn.execute(
+            """
+            INSERT INTO books (title, author, category, isbn, copies)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (title, author, category, isbn, copies)
+        )
+        conn.commit()
+
+        return {
+            "message": "Book added successfully.",
+            "book": {
+                "id": cursor.lastrowid,
+                "title": title,
+                "author": author,
+                "category": category,
+                "isbn": isbn,
+                "copies": copies
+            }
+        }, 201
+
+    except sqlite3.IntegrityError:
+        conn.rollback()
+        return {
+            "message": "A book with this ISBN may already exist."
+        }, 409
+
+    finally:
+        conn.close()
 
     # ---------------- REGISTER ----------------
 

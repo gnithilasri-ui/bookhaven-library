@@ -5,207 +5,15 @@ import "./App.css";
 
 
 
-const initialBooks = [
+const initialBooks = [];
 
-  {
 
-    id: 1,
 
-    title: "The Silent Patient",
+const initialMembers = [];
 
-    author: "Alex Michaelides",
 
-    category: "Thriller",
 
-    isbn: "9781250301697",
-
-    status: "Available",
-
-    copies: 4,
-
-  },
-
-  {
-
-    id: 2,
-
-    title: "Atomic Habits",
-
-    author: "James Clear",
-
-    category: "Self Help",
-
-    isbn: "9780735211292",
-
-    status: "Available",
-
-    copies: 5,
-
-  },
-
-  {
-
-    id: 3,
-
-    title: "The Alchemist",
-
-    author: "Paulo Coelho",
-
-    category: "Fiction",
-
-    isbn: "9780062315007",
-
-    status: "Issued",
-
-    copies: 2,
-
-  },
-
-  {
-
-    id: 4,
-
-    title: "Ikigai",
-
-    author: "Hector Garcia",
-
-    category: "Lifestyle",
-
-    isbn: "9780143130727",
-
-    status: "Available",
-
-    copies: 3,
-
-  },
-
-  {
-
-    id: 5,
-
-    title: "Clean Code",
-
-    author: "Robert C. Martin",
-
-    category: "Technology",
-
-    isbn: "9780132350884",
-
-    status: "Available",
-
-    copies: 2,
-
-  },
-
-];
-
-
-
-const initialMembers = [
-
-  {
-
-    id: 101,
-
-    name: "Ananya Sharma",
-
-    email: "ananya@example.com",
-
-    phone: "+91 98765 43210",
-
-    joined: "12 Aug 2026",
-
-    borrowed: 2,
-
-    status: "Active",
-
-  },
-
-  {
-
-    id: 102,
-
-    name: "Arjun Kumar",
-
-    email: "arjun@example.com",
-
-    phone: "+91 98765 12345",
-
-    joined: "18 Aug 2026",
-
-    borrowed: 1,
-
-    status: "Active",
-
-  },
-
-  {
-
-    id: 103,
-
-    name: "Meera Raj",
-
-    email: "meera@example.com",
-
-    phone: "+91 91234 56789",
-
-    joined: "21 Aug 2026",
-
-    borrowed: 0,
-
-    status: "Active",
-
-  },
-
-];
-
-
-
-const initialActivities = [
-
-  {
-
-    id: 1,
-
-    type: "issue",
-
-    title: "Book issued",
-
-    description: "The Alchemist was issued to Ananya Sharma.",
-
-    time: "Today, 10:24 AM",
-
-  },
-
-  {
-
-    id: 2,
-
-    type: "member",
-
-    title: "New member registered",
-
-    description: "Meera Raj joined the library.",
-
-    time: "Yesterday, 4:18 PM",
-
-  },
-
-  {
-
-    id: 3,
-
-    type: "return",
-
-    title: "Book returned",
-
-    description: "Atomic Habits was returned successfully.",
-
-    time: "Yesterday, 11:40 AM",
-
-  },
-
-];
+const initialActivities = [];
 
 
 
@@ -286,7 +94,7 @@ function App() {
   });
   const [books, setBooks] = useState(() => {
     try {
-      const saved = localStorage.getItem("library-books");
+      const saved = localStorage.getItem("library-books-clean-v1");
       return saved ? JSON.parse(saved) : initialBooks;
     } catch {
       return initialBooks;
@@ -294,7 +102,7 @@ function App() {
   });
   const [members, setMembers] = useState(() => {
     try {
-      const saved = localStorage.getItem("library-members");
+      const saved = localStorage.getItem("library-members-clean-v1");
       return saved ? JSON.parse(saved) : initialMembers;
     } catch {
       return initialMembers;
@@ -302,7 +110,7 @@ function App() {
   });
   const [activities, setActivities] = useState(() => {
     try {
-      const saved = localStorage.getItem("library-activities");
+      const saved = localStorage.getItem("library-activities-clean-v1");
       return saved ? JSON.parse(saved) : initialActivities;
     } catch {
       return initialActivities;
@@ -310,7 +118,7 @@ function App() {
   });
   const [loans, setLoans] = useState(() => {
     try {
-      const saved = localStorage.getItem("library-loans");
+      const saved = localStorage.getItem("library-loans-clean-v1");
       return saved ? JSON.parse(saved) : [];
     } catch {
       return [];
@@ -318,7 +126,7 @@ function App() {
   });
   const [waiting, setWaiting] = useState(() => {
     try {
-      const saved = localStorage.getItem("library-waiting");
+      const saved = localStorage.getItem("library-waiting-clean-v1");
       return saved ? JSON.parse(saved) : [];
     } catch {
       return [];
@@ -326,15 +134,25 @@ function App() {
   });
 
   const [page, setPage] = useState("dashboard");
+  const [profileName, setProfileName] = useState(() => session?.name || "");
+  const [profileUsername, setProfileUsername] = useState(() => session?.username || "");
+  const [profileEmail, setProfileEmail] = useState(() => session?.email || "");
+  const [profileMessage, setProfileMessage] = useState("");
   const [showLogin, setShowLogin] = useState(!session);
   const [loginRole, setLoginRole] = useState("admin");
   const [loginEmail, setLoginEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [loginError, setLoginError] = useState("");
+  const [showRegister, setShowRegister] = useState(false);
+  const [registerName, setRegisterName] = useState("");
+  const [registerUsername, setRegisterUsername] = useState("");
+  const [registerConfirmPassword, setRegisterConfirmPassword] = useState("");
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState("title");
   const [showMemberModal, setShowMemberModal] = useState(false);
   const [memberForm, setMemberForm] = useState({ name: "", email: "", phone: "" });
+  const [showBookModal, setShowBookModal] = useState(false);
+  const [bookForm, setBookForm] = useState({ title: "", author: "", category: "", isbn: "", copies: "1" });
   const [showIssueModal, setShowIssueModal] = useState(false);
   const [issueForm, setIssueForm] = useState({ memberId: "", bookId: "", dueDateMode: "automatic", manualDueDate: "" });
   const [selectedMember, setSelectedMember] = useState(null);
@@ -347,11 +165,11 @@ function App() {
     else root.setAttribute("data-theme", theme);
   }, [theme]);
 
-  useEffect(() => localStorage.setItem("library-books", JSON.stringify(books)), [books]);
-  useEffect(() => localStorage.setItem("library-members", JSON.stringify(members)), [members]);
-  useEffect(() => localStorage.setItem("library-activities", JSON.stringify(activities)), [activities]);
-  useEffect(() => localStorage.setItem("library-loans", JSON.stringify(loans)), [loans]);
-  useEffect(() => localStorage.setItem("library-waiting", JSON.stringify(waiting)), [waiting]);
+  useEffect(() => localStorage.setItem("library-books-clean-v1", JSON.stringify(books)), [books]);
+  useEffect(() => localStorage.setItem("library-members-clean-v1", JSON.stringify(members)), [members]);
+  useEffect(() => localStorage.setItem("library-activities-clean-v1", JSON.stringify(activities)), [activities]);
+  useEffect(() => localStorage.setItem("library-loans-clean-v1", JSON.stringify(loans)), [loans]);
+  useEffect(() => localStorage.setItem("library-waiting-clean-v1", JSON.stringify(waiting)), [waiting]);
   useEffect(() => {
     if (session) localStorage.setItem("library-session", JSON.stringify(session));
     else localStorage.removeItem("library-session");
@@ -389,12 +207,17 @@ function App() {
 
       const newSession = {
         name: user.name,
+        username: user.username || user.user_name || "",
         role: user.role,
         email: user.email,
         memberId: user.memberId || user.member_id || null,
       };
 
       setSession(newSession);
+      setProfileName(newSession.name || "");
+      setProfileUsername(newSession.username || "");
+      setProfileEmail(newSession.email || "");
+      setProfileMessage("");
       setShowLogin(false);
       setPage("dashboard");
       setLoginEmail("");
@@ -405,6 +228,49 @@ function App() {
         error.response?.data?.message ||
         "Invalid email or password. Please try again."
       );
+    }
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setLoginError("");
+
+    if (loginRole !== "user") {
+      setLoginError("Please select User to create a member account.");
+      return;
+    }
+    if (loginPassword.length < 8) {
+      setLoginError("Password must contain at least 8 characters.");
+      return;
+    }
+    if (loginPassword !== registerConfirmPassword) {
+      setLoginError("Passwords do not match.");
+      return;
+    }
+
+    try {
+      if (!registerUsername.trim()) {
+        setLoginError("Please enter a username.");
+        return;
+      }
+      await axios.post("http://127.0.0.1:5000/api/register", {
+        name: registerName.trim(),
+        username: registerUsername.trim(),
+        email: loginEmail.trim().toLowerCase(),
+        password: loginPassword,
+        confirmPassword: registerConfirmPassword,
+      });
+      setShowRegister(false);
+      setLoginRole("user");
+      setRegisterName("");
+      setRegisterUsername("");
+      setRegisterConfirmPassword("");
+      setLoginPassword("");
+      setLoginError("Account created successfully. Please sign in.");
+    } catch (error) {
+      console.error("Registration failed:", error);
+      setLoginError(error.response?.data?.message || error.response?.data?.error ||
+        "Could not create account. Check the details and try again.");
     }
   };
 
@@ -420,6 +286,27 @@ function App() {
         setPage("dashboard");
       },
     });
+  };
+
+  const addBook = () => {
+    const title = bookForm.title.trim();
+    const author = bookForm.author.trim();
+    const category = bookForm.category.trim();
+    const isbn = bookForm.isbn.trim();
+    const copies = Number(bookForm.copies);
+    if (!title || !author || !category || !isbn || !Number.isInteger(copies) || copies < 1) {
+      setConfirmBox({ title: "Check book details", message: "Enter the title, author, category, ISBN, and a whole number of copies (at least 1).", confirmText: "Okay", action: () => {} });
+      return;
+    }
+    if (books.some((book) => book.isbn.trim().toLowerCase() === isbn.toLowerCase())) {
+      setConfirmBox({ title: "ISBN already exists", message: "A book with this ISBN is already in your collection.", confirmText: "Okay", action: () => {} });
+      return;
+    }
+    const newBook = { id: Date.now(), title, author, category, isbn, copies, status: "Available" };
+    setBooks((prev) => [...prev, newBook]);
+    addActivity({ type: "book", title: "New book added", description: `${title} by ${author} was added to the collection.` });
+    setBookForm({ title: "", author: "", category: "", isbn: "", copies: "1" });
+    setShowBookModal(false);
   };
 
   const addMember = () => {
@@ -596,7 +483,15 @@ function App() {
         password={loginPassword}
         setPassword={setLoginPassword}
         error={loginError}
-        onSubmit={handleLogin}
+        onSubmit={showRegister ? handleRegister : handleLogin}
+        showRegister={showRegister}
+        setShowRegister={setShowRegister}
+        registerName={registerName}
+        setRegisterName={setRegisterName}
+        registerUsername={registerUsername}
+        setRegisterUsername={setRegisterUsername}
+        confirmPassword={registerConfirmPassword}
+        setConfirmPassword={setRegisterConfirmPassword}
         theme={theme}
         setTheme={setTheme}
       />
@@ -621,6 +516,32 @@ function App() {
           </div>
         </header>
 
+        {page === "profile" && (
+          <ProfilePage
+            session={session}
+            name={profileName}
+            username={profileUsername}
+            setUsername={setProfileUsername}
+            setName={setProfileName}
+            email={profileEmail}
+            setEmail={setProfileEmail}
+            message={profileMessage}
+            onSave={() => {
+              const cleanName = profileName.trim();
+              const cleanEmail = profileEmail.trim().toLowerCase();
+              if (!cleanName || !cleanEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+                setProfileMessage("Please enter a valid name and email address.");
+                return;
+              }
+              const updatedSession = { ...session, name: cleanName, username: profileUsername.trim(), email: cleanEmail };
+              setSession(updatedSession);
+              setProfileName(cleanName);
+              setProfileUsername(profileUsername.trim());
+              setProfileEmail(cleanEmail);
+              setProfileMessage("Profile updated in this browser session. For permanent account updates across devices, the backend profile-update API must also be implemented.");
+            }}
+          />
+        )}
         {page === "dashboard" && session.role === "admin" && (
           <AdminDashboard books={books} members={members} loans={loans} activities={activities} waiting={waiting} setPage={setPage} onIssue={() => setShowIssueModal(true)} onMarkFinePaid={markFinePaid} />
         )}
@@ -628,7 +549,7 @@ function App() {
           <UserDashboard books={books} loans={loans} waiting={waiting} activities={activities} session={session} recommendations={recommendations} setPage={setPage} />
         )}
         {page === "books" && (
-          <BooksPage books={filteredBooks} search={search} setSearch={setSearch} sortBy={sortBy} setSortBy={setSortBy} isAdmin={session.role === "admin"} onIssue={() => setShowIssueModal(true)} loans={loans} onReturn={returnLoan} waiting={waiting} session={session} onJoinQueue={joinQueue} />
+          <BooksPage books={filteredBooks} search={search} setSearch={setSearch} sortBy={sortBy} setSortBy={setSortBy} isAdmin={session.role === "admin"} onAddBook={() => setShowBookModal(true)} onIssue={() => setShowIssueModal(true)} loans={loans} onReturn={returnLoan} waiting={waiting} session={session} onJoinQueue={joinQueue} />
         )}
         {page === "ebooks" && <EbooksPage role={session.role} />}
         {page === "members" && session.role === "admin" && (
@@ -641,6 +562,22 @@ function App() {
         {page === "recommendations" && <Recommendations books={recommendations.length ? recommendations : books.filter((b) => b.copies > 0)} />}
         {page === "waiting" && <WaitingPage waiting={waiting} session={session} onRemove={removeQueue} />}
       </main>
+
+      {session.role === "admin" && showBookModal && (
+        <Modal title="Add New Book" onClose={() => setShowBookModal(false)}>
+          <div className="form-grid">
+            <Input label="Book Title" value={bookForm.title} onChange={(e) => setBookForm({ ...bookForm, title: e.target.value })} placeholder="Enter book title" />
+            <Input label="Author" value={bookForm.author} onChange={(e) => setBookForm({ ...bookForm, author: e.target.value })} placeholder="Enter author name" />
+            <Input label="Category" value={bookForm.category} onChange={(e) => setBookForm({ ...bookForm, category: e.target.value })} placeholder="e.g. Technology, Fiction" />
+            <Input label="ISBN" value={bookForm.isbn} onChange={(e) => setBookForm({ ...bookForm, isbn: e.target.value })} placeholder="Enter unique ISBN" />
+            <Input label="Number of Copies" type="number" value={bookForm.copies} onChange={(e) => setBookForm({ ...bookForm, copies: e.target.value })} placeholder="1" />
+          </div>
+          <div className="modal-actions">
+            <button className="btn secondary" onClick={() => setShowBookModal(false)}>Cancel</button>
+            <button className="btn primary" onClick={addBook}>Add Book</button>
+          </div>
+        </Modal>
+      )}
 
       {session.role === "admin" && showMemberModal && (
         <Modal title="Add New Member" onClose={() => setShowMemberModal(false)}>
@@ -737,224 +674,208 @@ function App() {
 
 
 function LoginPage({
-
-  role,
-
-  setRole,
-
-  email,
-
-  setEmail,
-
-  password,
-
-  setPassword,
-
-  error,
-
-  onSubmit,
-
-  theme,
-
-  setTheme,
-
+  role,
+  setRole,
+  email,
+  setEmail,
+  password,
+  setPassword,
+  error,
+  onSubmit,
+  showRegister,
+  setShowRegister,
+  registerName,
+  setRegisterName,
+  registerUsername,
+  setRegisterUsername,
+  confirmPassword,
+  setConfirmPassword,
+  theme,
+  setTheme,
 }) {
-
-  return (
-
-    <div className="login-page">
-
-      <div className="login-theme">
-
-        <ThemeSwitcher
-
-          theme={theme}
-
-          setTheme={setTheme}
-
-        />
-
-      </div>
-
-
-
-      <div className="login-card">
-
-        <div className="brand-mark">
-
-          <div className="brand-symbol">
-
-            <span></span>
-
-            <span></span>
-
-            <span></span>
-
-          </div>
-
-        </div>
-
-
-
-        <div className="login-heading">
-
-          <p className="eyebrow">WELCOME BACK</p>
-
-
-
-          <h1>BookHaven</h1>
-
-
-
-          <p>
-
-            Smart library access, organized beautifully.
-
-          </p>
-
-        </div>
-
-
-
-        <div className="role-switch">
-
-          <button
-
-            className={
-
-              role === "admin" ? "active" : ""
-
-            }
-
-            onClick={() => setRole("admin")}
-
-            type="button"
-
-          >
-
-            Admin
-
-          </button>
-
-
-
-          <button
-
-            className={
-
-              role === "user" ? "active" : ""
-
-            }
-
-            onClick={() => setRole("user")}
-
-            type="button"
-
-          >
-
-            User
-
-          </button>
-
-        </div>
-
-
-
-        <form
-
-          onSubmit={onSubmit}
-
-          className="login-form"
-
-        >
-
-          <Input
-
-            label="Email Address"
-
-            type="email"
-
-            value={email}
-
-            onChange={(e) =>
-
-              setEmail(e.target.value)
-
-            }
-
-            placeholder={
-
-              role === "admin"
-
-                ? "admin@bookhaven.com"
-
-                : "user@bookhaven.com"
-
-            }
-
-          />
-
-
-
-          <Input
-
-            label="Password"
-
-            type="password"
-
-            value={password}
-
-            onChange={(e) =>
-
-              setPassword(e.target.value)
-
-            }
-
-            placeholder="Enter your password"
-
-          />
-
-
-
-          {error && (
-
-            <div className="error-message">
-
-              {error}
-
-            </div>
-
-          )}
-
-
-
-          <button
-
-            className="btn primary login-button"
-
-            type="submit"
-
-          >
-
-            Sign in as{" "}
-
-            {role === "admin" ? "Admin" : "User"}
-
-          </button>
-
-        </form>
-
-      </div>
-
-    </div>
-
-  );
-
+  const switchRole = (nextRole) => {
+    setRole(nextRole);
+    setShowRegister(false);
+  };
+
+  return (
+    <div className="login-page">
+      <div className="login-theme">
+        <ThemeSwitcher theme={theme} setTheme={setTheme} />
+      </div>
+      <div className="login-card">
+        <div className="brand-mark">
+          <div className="brand-symbol"><span></span><span></span><span></span></div>
+        </div>
+        <div className="login-heading">
+          <p className="eyebrow">{showRegister ? "JOIN OUR LIBRARY" : "WELCOME BACK"}</p>
+          <h1>BookHaven</h1>
+          <p>Smart library access, organized beautifully.</p>
+        </div>
+
+        <div className="role-switch">
+          <button className={role === "admin" ? "active" : ""} onClick={() => switchRole("admin")} type="button">Admin</button>
+          <button className={role === "user" ? "active" : ""} onClick={() => switchRole("user")} type="button">User</button>
+        </div>
+
+        <form onSubmit={onSubmit} className="login-form">
+          {showRegister && role === "user" && (
+            <>
+              <Input
+                label="Full Name"
+                type="text"
+                value={registerName}
+                onChange={(e) => setRegisterName(e.target.value)}
+                placeholder="Enter your full name"
+              />
+              <Input
+                label="Username"
+                type="text"
+                value={registerUsername}
+                onChange={(e) => setRegisterUsername(e.target.value)}
+                placeholder="Choose a username"
+              />
+            </>
+          )}
+
+          <Input
+            label={showRegister ? "Email Address" : "Enter your email or username"}
+            type="text"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder={showRegister ? "you@example.com" : "Enter your email or username"}
+          />
+
+          <Input
+            label="Password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder={showRegister ? "Create a password (min. 8 characters)" : "Enter your password"}
+          />
+
+          {showRegister && role === "user" && (
+            <Input
+              label="Confirm Password"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Re-enter your password"
+            />
+          )}
+
+          {error && <div className="error-message" role="alert">{error}</div>}
+
+          <button className="btn primary login-button" type="submit">
+            {showRegister ? "Create Account" : `Sign in as ${role === "admin" ? "Admin" : "User"}`}
+          </button>
+        </form>
+
+        {role === "user" && (
+          <div style={{ marginTop: 18, textAlign: "center", fontSize: 14 }}>
+            {showRegister ? "Already have an account? " : "Don't have an account? "}
+            <button
+              type="button"
+              onClick={() => setShowRegister((current) => !current)}
+              style={{ background: "none", border: "none", padding: 0, color: "var(--accent, #8b1e2d)", fontWeight: 700, cursor: "pointer", font: "inherit" }}
+            >
+              {showRegister ? "Sign in" : "Register"}
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
 }
 
+function ProfilePage({ session, name, setName, username, setUsername, email, setEmail, message, onSave }) {
+  const initials = (name || session?.name || "U").trim().split(/\s+/).filter(Boolean).map((part) => part[0]).join("").slice(0, 2).toUpperCase();
+  const roleLabel = session?.role === "admin" ? "Administrator" : "Library Member";
+
+  return (
+    <section className="page-section profile-page">
+      <style>{`
+        .profile-page { width: 100%; max-width: 1120px; margin: 0 auto; }
+        .profile-page .profile-intro { margin: 0 0 24px; }
+        .profile-page .profile-intro .eyebrow { margin: 0 0 8px; letter-spacing: .16em; }
+        .profile-page .profile-intro h2 { margin: 0; font-size: clamp(28px, 3vw, 36px); line-height: 1.15; }
+        .profile-page .profile-intro p:last-child { margin: 10px 0 0; max-width: 620px; line-height: 1.65; color: var(--muted, #a7a9b8); font-size: 14px; }
+        .profile-page .profile-layout { display: grid; grid-template-columns: minmax(230px, .72fr) minmax(0, 1.5fr); gap: 22px; align-items: start; }
+        .profile-page .profile-summary, .profile-page .profile-form-card { min-width: 0; border: 1px solid var(--border, #353642); border-radius: 20px; background: var(--panel, #1d1e26); }
+        .profile-page .profile-summary { padding: 26px 22px; text-align: center; }
+        .profile-page .profile-avatar { width: 84px; height: 84px; border-radius: 24px; display: grid; place-items: center; margin: 0 auto 16px; background: linear-gradient(145deg, var(--accent, #bd354e), #852238); color: #fff; font-size: 27px; font-weight: 800; box-shadow: 0 10px 28px #0002; }
+        .profile-page .profile-summary h3 { margin: 0; font-size: 19px; line-height: 1.35; overflow-wrap: anywhere; }
+        .profile-page .profile-summary .profile-email { margin: 8px 0 16px; color: var(--muted, #a7a9b8); font-size: 13px; overflow-wrap: anywhere; }
+        .profile-page .profile-role-pill { display: inline-flex; align-items: center; gap: 7px; border: 1px solid var(--border, #353642); background: var(--surface, #24252f); border-radius: 999px; padding: 7px 12px; font-size: 12px; font-weight: 650; }
+        .profile-page .profile-summary-note { margin: 20px 0 0; padding-top: 16px; border-top: 1px solid var(--border, #353642); text-align: left; color: var(--muted, #a7a9b8); font-size: 12px; line-height: 1.6; }
+        .profile-page .profile-form-card { padding: clamp(20px, 3vw, 30px); }
+        .profile-page .profile-form-heading { margin-bottom: 24px; }
+        .profile-page .profile-form-heading h3 { margin: 0 0 6px; font-size: 20px; }
+        .profile-page .profile-form-heading p { margin: 0; color: var(--muted, #a7a9b8); font-size: 13px; line-height: 1.55; }
+        .profile-page .profile-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px 18px; }
+        .profile-page .profile-field { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+        .profile-page .profile-field.profile-field-wide { grid-column: 1 / -1; }
+        .profile-page .profile-field > span { font-size: 13px; font-weight: 650; }
+        .profile-page .profile-field input { box-sizing: border-box; width: 100%; min-width: 0; min-height: 46px; padding: 11px 13px; border-radius: 10px; border: 1px solid var(--border, #41424e); background: var(--input-bg, #171820); color: var(--text, #f7f7fb); font: inherit; font-size: 14px; outline: none; transition: border-color .18s, box-shadow .18s; }
+        .profile-page .profile-field input:focus { border-color: var(--accent, #bd354e); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent, #bd354e) 20%, transparent); }
+        .profile-page .profile-field small { color: var(--muted, #a7a9b8); font-size: 11px; line-height: 1.45; }
+        .profile-page .profile-form-footer { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-top: 26px; padding-top: 20px; border-top: 1px solid var(--border, #353642); }
+        .profile-page .profile-save-btn { min-height: 44px; padding: 0 20px; border: 0; border-radius: 11px; cursor: pointer; font-weight: 700; }
+        .profile-page .profile-save-btn:focus-visible { outline: 3px solid color-mix(in srgb, var(--accent, #bd354e) 45%, transparent); outline-offset: 3px; }
+        .profile-page .profile-role-note { color: var(--muted, #a7a9b8); font-size: 12px; line-height: 1.5; }
+        .profile-page .profile-status { margin: 18px 0 0; padding: 12px 14px; border-radius: 10px; background: var(--surface, #24252f); border: 1px solid var(--border, #353642); font-size: 12px; line-height: 1.6; overflow-wrap: anywhere; }
+        @media (max-width: 800px) { .profile-page .profile-layout { grid-template-columns: 1fr; } .profile-page .profile-summary { display: grid; grid-template-columns: auto minmax(0,1fr); column-gap: 18px; align-items: center; text-align: left; } .profile-page .profile-avatar { grid-row: span 2; margin: 0; width: 68px; height: 68px; border-radius: 20px; } .profile-page .profile-summary h3 { align-self: end; } .profile-page .profile-summary .profile-email { margin: 4px 0 0; } .profile-page .profile-role-pill { grid-column: 1 / -1; justify-self: start; margin-top: 16px; } .profile-page .profile-summary-note { grid-column: 1 / -1; width: 100%; box-sizing: border-box; } }
+        @media (max-width: 520px) { .profile-page .profile-fields { grid-template-columns: 1fr; } .profile-page .profile-field.profile-field-wide { grid-column: auto; } .profile-page .profile-form-footer { align-items: stretch; flex-direction: column; } .profile-page .profile-save-btn { width: 100%; } }
+      `}</style>
+      <div className="profile-intro">
+        <p className="eyebrow">ACCOUNT SETTINGS</p>
+        <h2>My Profile</h2>
+        <p>Manage your personal details and review the account you’re signed in with.</p>
+      </div>
+      <div className="profile-layout">
+        <aside className="profile-summary">
+          <div className="profile-avatar" aria-hidden="true">{initials}</div>
+          <h3>{name || session?.name || "Your account"}</h3>
+          <p className="profile-email">{email || "No email available"}</p>
+          <span className="profile-role-pill"><span aria-hidden="true">●</span>{roleLabel}</span>
+          <p className="profile-summary-note">Your role is managed by BookHaven and can’t be changed from this page.</p>
+        </aside>
+        <div className="profile-form-card">
+          <div className="profile-form-heading">
+            <h3>Personal information</h3>
+            <p>Keep your profile details up to date. Fields marked as required must be filled in.</p>
+          </div>
+          <form onSubmit={(event) => { event.preventDefault(); onSave(); }}>
+            <div className="profile-fields">
+              <label className="profile-field">
+                <span>Full name <b aria-hidden="true">*</b></span>
+                <input value={name} onChange={(event) => setName(event.target.value)} placeholder="Enter your full name" autoComplete="name" required />
+              </label>
+              <label className="profile-field">
+                <span>Username</span>
+                <input value={username} onChange={(event) => setUsername(event.target.value)} placeholder="Username not available" autoComplete="username" />
+                <small>If your username is missing, it may not be included in the server’s login response.</small>
+              </label>
+              <label className="profile-field profile-field-wide">
+                <span>Email address <b aria-hidden="true">*</b></span>
+                <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} placeholder="Enter your email address" autoComplete="email" required />
+              </label>
+            </div>
+            <div className="profile-form-footer">
+              <button className="btn primary-btn profile-save-btn" type="submit">Save changes</button>
+              <span className="profile-role-note">Account type: {session?.role === "admin" ? "Admin" : "User"} · Read-only</span>
+            </div>
+            {message && <p className="profile-status" role="status">{message}</p>}
+          </form>
+        </div>
+      </div>
+    </section>
+  );
+}
 
 function pageTitle(page) {
   const titles = {
+    profile: "My Profile",
     books: "Book Collection",
     ebooks: "E-Books Library",
     members: "Members",
@@ -1394,6 +1315,7 @@ function EbooksPage({ role }) {
 function Sidebar({ page, setPage, session, onLogout }) {
   const adminMenu = [
     { id: "dashboard", icon: "⌂", label: "Dashboard" },
+    { id: "profile", icon: "◎", label: "My Profile" },
     { id: "books", icon: "▤", label: "Books" },
     { id: "members", icon: "♙", label: "Members" },
     { id: "issue", icon: "↔", label: "Issue / Return" },
@@ -1405,6 +1327,7 @@ function Sidebar({ page, setPage, session, onLogout }) {
 
   const userMenu = [
     { id: "dashboard", icon: "⌂", label: "Dashboard" },
+    { id: "profile", icon: "◎", label: "My Profile" },
     { id: "books", icon: "▤", label: "Browse Books" },
     { id: "waiting", icon: "⌛", label: "My Queue" },
     { id: "history", icon: "◷", label: "My Activity" },
@@ -1600,12 +1523,12 @@ function UserDashboard({ books, loans, waiting, activities, session, recommendat
 }
 
 
-function BooksPage({ books, search, setSearch, sortBy, setSortBy, isAdmin, onIssue, loans, onReturn, waiting, session, onJoinQueue }) {
+function BooksPage({ books, search, setSearch, sortBy, setSortBy, isAdmin, onAddBook, onIssue, loans, onReturn, waiting, session, onJoinQueue }) {
   return (
     <div className="page-content">
       <div className="page-toolbar">
         <div><p className="eyebrow">COLLECTION</p><h2>{isAdmin ? "Books" : "Browse Books"}</h2><p className="muted">{isAdmin ? "Manage your library collection and lending." : "Search the collection and join a waiting queue when a book is unavailable."}</p></div>
-        {isAdmin && <button className="btn primary" onClick={onIssue}>+ Issue Book</button>}
+        {isAdmin && <div className="toolbar-actions"><button className="btn secondary" onClick={onAddBook}>+ Add Book</button><button className="btn primary" onClick={onIssue}>+ Issue Book</button></div>}
       </div>
       <div className="toolbar-controls">
         <div className="search-box"><span>⌕</span><input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search title, author, category or ISBN..." /></div>
